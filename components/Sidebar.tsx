@@ -65,6 +65,62 @@ const Sidebar = ({ expand, setExpand }) => {
           </div>
           {expand && <p className="text-white text font-medium">New chat</p>}
         </button>
+
+        <div
+          className={`mt-8 text-white/25 text-sm ${
+            expand ? "block" : "hidden"
+          }`}
+        >
+          <p className="my-1">Recents</p>
+          {/* chatLabel */}
+        </div>
+      </div>
+
+      <div className="group relative">
+        <div
+          className={`flex items-center cursor-pointer ${
+            expand
+              ? "gap-1 text-white/80 text-sm p-2.5 border border-primary rounded-lg hover:bg-white/10"
+              : "h-10 w-10 mx-auto hover:bg-gray-500/30 rounded-lg justify-center"
+          }`}
+        >
+          <Image
+            className={expand ? "w-5" : "w-6.5 mx-auto"}
+            src={expand ? assets.phone_icon : assets.phone_icon_dull}
+            alt=""
+          />
+          {expand && (
+            <>
+              <span className="ml-1">Get App</span>
+              <Image alt="" src={assets.new_icon} className="w-8" />
+            </>
+          )}
+        </div>
+
+        <div
+          className={`absolute -top-60 pb-8 ${
+            !expand && "-right-40"
+          } opacity-0 group-hover:opacity-100 hidden group-hover:block transition`}
+        >
+          <div className="relative w-max bg-black text-white text-sm p-3 rounded-lg shadow-lg">
+            <Image src={assets.qrcode} alt="" className="w-44" />
+            <p className="text-center mt-2">Scan to get DeepSeek App</p>
+            <div
+              className={`w-3 h-3 absolute bg-black rotate-45 ${
+                expand ? "right-1/2 translate-x-1/2" : "left-4"
+              } -bottom-1.5`}
+            ></div>
+          </div>
+        </div>
+
+        <div
+          className={`flex items-center ${
+            expand ? " hover:bg-white/10 rounded-lg" : "justify-center w-full"
+          } gap-3 text-white/60 text-sm p-2 mt-2 cursor-pointer`}
+        >
+          <Image src={assets.profile_icon} alt="" className="w-7" />
+          {expand && <span>My Profile</span>}
+        </div>
       </div>
     </div>
   );
