@@ -6,27 +6,36 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const wh = new Webhook(process.env.SIGNING_SECRET);
+    const SIGNING_SECRET = process.env.SIGNING_SECRET;
+
+    if (!SIGNING_SECRET) {
+      return NextResponse.json(
+        { error: "Missing SIGNING_SECRET" },
+        { status: 500 }
+      );
+    }
+
+    const wh = new Webhook(SIGNING_SECRET);
+
     const headerPayload = await headers();
     const svixHeaders = {
-      "svix-id": headerPayload.get("svix-id"),
-      "svix-timestamp": headerPayload.get("svix-timestamp"),
-      "svix-signature": headerPayload.get("svix-signature"),
+      "svix-id": headerPayload.get("svix-id") || "",
+      "svix-timestamp": headerPayload.get("svix-timestamp") || "",
+      "svix-signature": headerPayload.get("svix-signature") || "",
     };
 
-    // Get the payload and verify it
     const payload = await req.json();
     const body = JSON.stringify(payload);
-    const { data, type } = wh.verify(body, svixHeaders);
+
+    const { data, type } = wh.verify(body, svixHeaders) as any;
 
     await connectDB();
 
-    // Prepare the user data to be saved in the database
     const userData = {
       _id: data.id,
-      email: data.email_addresses[0].email_address,
-      name: `${data.first_name} ${data.last_name}`,
-      image: data.image_url,
+      email: data.email_addresses?.[0]?.email_address || "",
+      name: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
+      image: data.image_url || "",
     };
 
     switch (type) {
@@ -47,7 +56,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "event received" });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error?.message || "Webhook error" },
+      { status: 400 }
+    );
   }
 }
