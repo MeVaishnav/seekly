@@ -4,7 +4,7 @@ import User from "@/models/user";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
     const wh = new Webhook(process.env.SIGNING_SECRET);
     const headerPayload = await headers();
