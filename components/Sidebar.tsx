@@ -5,10 +5,25 @@ import { useClerk, UserButton } from "@clerk/nextjs";
 import { useAppContext } from "@/context/AppContext";
 import ChatLabel from "./ChatLabel";
 
-const Sidebar = ({ expand, setExpand }) => {
+type SidebarProps = {
+  expand: boolean;
+  setExpand: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type OpenMenuState = {
+  id: number;
+  open: boolean;
+};
+
+const Sidebar = ({ expand, setExpand }: SidebarProps) => {
   const { openSignIn } = useClerk();
   const { user } = useAppContext();
-  const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
+
+  const [openMenu, setOpenMenu] = useState<OpenMenuState>({
+    id: 0,
+    open: false,
+  });
+
   return (
     <div
       className={`flex flex-col justify-between bg-[#212327] pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${
@@ -26,8 +41,9 @@ const Sidebar = ({ expand, setExpand }) => {
             src={expand ? assets.logo_text : assets.logo_icon}
             alt=""
           />
+
           <div
-            onClick={() => (expand ? setExpand(false) : setExpand(true))}
+            onClick={() => setExpand(!expand)}
             className="group relative flex items-center justify-center hover:bg-gray-500/20 transition-all duration-300 h-9 w-9 aspect-square rounded-lg cursor-pointer"
           >
             <Image src={assets.menu_icon} alt="" className="md:hidden" />
@@ -53,6 +69,7 @@ const Sidebar = ({ expand, setExpand }) => {
             </div>
           </div>
         </div>
+
         <button
           className={`mt-8 flex items-center justify-center cursor-pointer ${
             expand
@@ -65,10 +82,12 @@ const Sidebar = ({ expand, setExpand }) => {
             src={expand ? assets.chat_icon : assets.chat_icon_dull}
             alt=""
           />
+
           <div className="absolute w-max -top-12 -right-12 opacity-0 group-hover:opacity-100 transition bg-black text-white text-sm px-3 py-2 rounded-lg shadow-lg pointer-events-none">
             New chat
             <div className="w-3 h-3 absolute bg-black rotate-45 left-4 -bottom-1.5"></div>
           </div>
+
           {expand && <p className="text-white text font-medium">New chat</p>}
         </button>
 
@@ -95,6 +114,7 @@ const Sidebar = ({ expand, setExpand }) => {
             src={expand ? assets.phone_icon : assets.phone_icon_dull}
             alt=""
           />
+
           {expand && (
             <>
               <span className="ml-1">Get App</span>
@@ -118,6 +138,7 @@ const Sidebar = ({ expand, setExpand }) => {
             ></div>
           </div>
         </div>
+
         <div
           onClick={() => {
             if (!user) openSignIn();

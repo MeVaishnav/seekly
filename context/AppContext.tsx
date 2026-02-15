@@ -1,19 +1,36 @@
 "use client";
+
 import { useUser } from "@clerk/nextjs";
-import { createContext, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 
-export const AppContext = createContext();
-
-export const useAppContext = () => {
-  return useContext(AppContext);
+type AppContextType = {
+  user: ReturnType<typeof useUser>["user"];
+  isLoaded: boolean;
+  isSignedIn: boolean | undefined;
 };
 
-export const AppContextProvider = ({ children }) => {
-  const { user } = useUser();
+const AppContext = createContext<AppContextType | null>(null);
 
-  const value = {
-    user,
-  };
+export const useAppContext = () => {
+  const ctx = useContext(AppContext);
+  if (!ctx) {
+    throw new Error("useAppContext must be used inside AppContextProvider");
+  }
+  return ctx;
+};
+
+export const AppContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { user, isLoaded, isSignedIn } = useUser();
+
+  const value = useMemo(() => {
+    return { user, isLoaded, isSignedIn };
+  }, [user, isLoaded, isSignedIn]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
+
+export { AppContext };
