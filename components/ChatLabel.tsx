@@ -2,9 +2,14 @@ import { assets } from "@/assets/assets";
 import Image from "next/image";
 import React from "react";
 
+type OpenMenuState = {
+  id: number;
+  open: boolean;
+};
+
 type ChatLabelProps = {
-  openMenu: { open: boolean };
-  setOpenMenu: React.Dispatch<React.SetStateAction<{ open: boolean }>>;
+  openMenu: OpenMenuState;
+  setOpenMenu: React.Dispatch<React.SetStateAction<OpenMenuState>>;
 };
 
 const ChatLabel = ({ openMenu, setOpenMenu }: ChatLabelProps) => {
@@ -17,6 +22,10 @@ const ChatLabel = ({ openMenu, setOpenMenu }: ChatLabelProps) => {
           src={assets.three_dots}
           alt=""
           className={`w-4 ${openMenu.open ? "" : "hidden"} group-hover:block`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenMenu({ id: 1, open: !openMenu.open });
+          }}
         />
 
         <div
