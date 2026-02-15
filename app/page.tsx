@@ -30,7 +30,7 @@ export default function Home() {
             <>
               <div>
                 <Image src={assets.logo_icon} alt="" className="h-16" />
-                <p className="text-2xl font-medium">Hi, I'm Seekly.</p>
+                <p className="text-2xl font-medium">Hi, I'm Deepseek.</p>
               </div>
               <p className="text-sm mt-2">What can i do for you?</p>
             </>
