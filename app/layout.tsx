@@ -3,7 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
-
+import { Toaster } from "react-hot-toast";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,6 +31,12 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
+            <Toaster
+              toastOptions={{
+                success: { style: { background: "black", color: "white" } },
+                error: { style: { background: "black", color: "white" } },
+              }}
+            />
             {children}
           </body>
         </html>
